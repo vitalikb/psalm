@@ -737,6 +737,12 @@ class MethodCallAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\
 
                     break;
                 }
+
+                if (!$args && $var_id) {
+                    if (MethodAnalyzer::isMethodResultMemoizable($codebase, $method_id)) {
+                        $method_var_id = $var_id . '->' . $method_name_lc . '()';
+                    }
+                }
             }
         }
 

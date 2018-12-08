@@ -54,4 +54,12 @@ class MethodStorage extends FunctionLikeStorage
      * @var string
      */
     public $defining_fqcln;
+
+    /**
+     * Whether or not the method returns the result of a property fetch without
+     * doing anything else
+     *
+     * @var boolean
+     */
+    public $property_fetch = false;
 }

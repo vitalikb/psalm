@@ -281,6 +281,29 @@ class MethodCallTest extends TestCase
                         }
                     }'
             ],
+            'memoizeSimpleMethodCall' => [
+                '<?php
+                    class C {
+                        /** @var ?int */
+                        private $x;
+
+                        public function getX() : ?int {
+                            return $this->x;
+                        }
+
+                        public function setX(int $x) : void {
+                            $this->x = $x;
+                        }
+                    }
+
+                    function takesInt(int $_) : void {}
+
+                    function takesC(C $c) : void {
+                        if ($c->getX()) {
+                            takesInt($c->getX());
+                        }
+                    }'
+            ],
         ];
     }
 
@@ -519,6 +542,31 @@ class MethodCallTest extends TestCase
                         }
                     }',
                 'error_message' => 'UndefinedClass'
+            ],
+            'memoizeSimpleMethodCallBustAfterUpdate' => [
+                '<?php
+                    class C {
+                        /** @var ?int */
+                        private $x;
+
+                        public function getX() : ?int {
+                            return $this->x;
+                        }
+
+                        public function setX(?int $x) : void {
+                            $this->x = $x;
+                        }
+                    }
+
+                    function takesInt(int $_) : void {}
+
+                    function takesC(C $c) : void {
+                        if ($c->getX()) {
+                            $c->setX(null);
+                            takesInt($c->getX());
+                        }
+                    }',
+                'error_message' => 'PossiblyNullArgument'
             ],
         ];
     }
